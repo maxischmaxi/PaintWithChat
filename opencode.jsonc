@@ -4,7 +4,7 @@
   "model": "anthropic/claude-sonnet-4-5-20250929",
   "autoupdate": true,
   "provider": {},
-  "instructions": [],
+  "instructions": ["README.md"],
   "permission": {
     "edit": "allow",
     "bash": "allow",
