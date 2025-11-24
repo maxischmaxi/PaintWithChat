@@ -1,0 +1,23 @@
+{
+  "name": "streamdraw",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interactive drawing tool for Twitch streamers",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "clean": "pnpm -r clean",
+    "api": "pnpm --filter @streamdraw/api dev",
+    "control": "pnpm --filter @streamdraw/control-app dev",
+    "overlay": "pnpm --filter @streamdraw/overlay-app dev",
+    "sync-env": "./sync-env.sh"
+  },
+  "keywords": [
+    "twitch",
+    "drawing",
+    "streaming",
+    "obs"
+  ],
+  "author": "",
+  "license": "MIT"
+}
