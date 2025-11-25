@@ -27,8 +27,6 @@ app.use("/health", healthRoutes);
 // Application routes
 app.use("/auth", authRoutes);
 app.use("/session", sessionRoutes);
-  }
-});
 
 // Initialize Socket.io
 const io = initializeSocket(httpServer);
