@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
-import type { Point } from "@streamdraw/shared";
-import { CANVAS_WIDTH, CANVAS_HEIGHT } from "@streamdraw/shared";
+import type { Point } from "@paintwithchat/shared";
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from "@paintwithchat/shared";
 
 interface ViewerCanvasProps {
   onStrokeStart?: (

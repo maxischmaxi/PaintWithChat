@@ -81,6 +81,10 @@
       "type": "local",
       "command": ["npx", "shadcn@latest", "mcp"],
     },
+    "Railway": {
+      "type": "local",
+      "command": ["npx", "-y", "@railway/mcp-server"],
+    },
     "serena": {
       "type": "local",
       "command": [

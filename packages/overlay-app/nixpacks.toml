@@ -1,0 +1,27 @@
+# Railway Nixpacks configuration for Overlay App
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = [
+  "echo '📦 Installing dependencies...'",
+  "cd /app",
+  "pnpm install --frozen-lockfile --prefer-offline"
+]
+
+[phases.build]
+cmds = [
+  "echo '🔨 Building shared package...'",
+  "cd /app/packages/shared && pnpm build",
+  "echo '🔨 Building Overlay App...'",
+  "cd /app/packages/overlay-app && pnpm build",
+  "echo '✅ Build complete!'",
+  "ls -la /app/packages/overlay-app/dist"
+]
+
+[start]
+# Serve static files using a simple HTTP server
+cmd = "npx serve -s packages/overlay-app/dist -l ${PORT:-3000}"
+
+[variables]
+NODE_ENV = "production"

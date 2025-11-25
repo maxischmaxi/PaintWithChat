@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import type { Session, Point, DrawingStroke } from "@streamdraw/shared";
+import type { Session, Point, DrawingStroke } from "@paintwithchat/shared";
 import { useSocket } from "../hooks/useSocket";
 import {
   startSession,

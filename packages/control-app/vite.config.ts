@@ -8,9 +8,9 @@ export default defineConfig({
     port: 5173,
   },
   optimizeDeps: {
-    include: ["@streamdraw/shared"],
+    include: ["@paintwithchat/shared"],
   },
   resolve: {
-    dedupe: ["@streamdraw/shared"],
+    dedupe: ["@paintwithchat/shared"],
   },
 });

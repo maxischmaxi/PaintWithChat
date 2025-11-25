@@ -8,7 +8,7 @@ import {
   SelectUserResponse,
   NextUserResponse,
   EndSessionResponse,
-} from "@streamdraw/shared";
+} from "@paintwithchat/shared";
 
 const router = Router();
 

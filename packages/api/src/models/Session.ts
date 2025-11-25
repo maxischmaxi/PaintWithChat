@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { UserSession } from "@streamdraw/shared";
+import { UserSession } from "@paintwithchat/shared";
 
 export interface ISession extends Document {
   streamerId: string;

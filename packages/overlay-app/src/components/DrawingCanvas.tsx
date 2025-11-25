@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import type { Point } from "@streamdraw/shared";
+import type { Point } from "@paintwithchat/shared";
 import {
   COLORS,
   BRUSH_SIZES,
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
-} from "@streamdraw/shared";
+} from "@paintwithchat/shared";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { cn } from "../lib/utils";

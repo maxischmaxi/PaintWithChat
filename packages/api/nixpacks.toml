@@ -1,0 +1,32 @@
+# Railway Nixpacks configuration for API service
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = [
+  "echo '📦 Installing dependencies...'",
+  "cd /app",
+  "pnpm install --frozen-lockfile --prefer-offline"
+]
+
+[phases.build]
+cmds = [
+  "echo '🔨 Building shared package...'",
+  "cd /app/packages/shared && pnpm build",
+  "echo '🔨 Building API...'",
+  "cd /app/packages/api && pnpm build",
+  "echo '✅ Build complete!'"
+]
+
+[start]
+cmd = "cd packages/api && node dist/index.js"
+
+[variables]
+NODE_ENV = "production"
+PORT = "3001"
+
+# Health check configuration
+[healthcheck]
+path = "/health"
+interval = 30
+timeout = 10

@@ -2,7 +2,7 @@
 
 ## Problem behoben!
 
-Das Import-Problem mit `@streamdraw/shared` wurde behoben. Die TypeScript-Interfaces werden jetzt korrekt als ESM exportiert.
+Das Import-Problem mit `@paintwithchat/shared` wurde behoben. Die TypeScript-Interfaces werden jetzt korrekt als ESM exportiert.
 
 ## Schnellstart
 
@@ -33,7 +33,7 @@ pnpm dev
 
 1. Gehe zu https://dev.twitch.tv/console/apps
 2. Klicke "Register Your Application"
-3. **Name**: StreamDraw (oder beliebig)
+3. **Name**: PaintWithChat (oder beliebig)
 4. **OAuth Redirect URLs** (beide hinzufügen!):
    ```
    http://localhost:5173/auth/callback
@@ -49,7 +49,7 @@ pnpm dev
 ### Root `.env`:
 
 ```env
-MONGODB_URI=mongodb://streamdraw:streamdraw123@localhost:27017/streamdraw?authSource=admin
+MONGODB_URI=mongodb://paintwithchat:paintwithchat123@localhost:27017/paintwithchat?authSource=admin
 TWITCH_CLIENT_ID=hier_deine_client_id
 TWITCH_CLIENT_SECRET=hier_dein_client_secret
 TWITCH_REDIRECT_URI=http://localhost:5173/auth/callback

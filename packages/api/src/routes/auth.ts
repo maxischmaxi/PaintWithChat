@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { User } from "../models";
 import { getTwitchAccessToken, getTwitchUser } from "../utils/twitch";
 import { generateToken } from "../utils/jwt";
-import { LoginRequest, LoginResponse, AuthResponse } from "@streamdraw/shared";
+import { LoginRequest, LoginResponse, AuthResponse } from "@paintwithchat/shared";
 import { authenticateToken, AuthRequest } from "../middleware/auth";
 
 const router = Router();

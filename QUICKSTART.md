@@ -33,7 +33,7 @@ cp .env.example .env
 Bearbeite `.env` und füge deine Twitch Credentials ein:
 
 ```env
-MONGODB_URI=mongodb://streamdraw:streamdraw123@localhost:27017/streamdraw?authSource=admin
+MONGODB_URI=mongodb://paintwithchat:paintwithchat123@localhost:27017/paintwithchat?authSource=admin
 TWITCH_CLIENT_ID=deine_twitch_client_id
 TWITCH_CLIENT_SECRET=dein_twitch_client_secret
 TWITCH_REDIRECT_URI=http://localhost:5173/auth/callback
@@ -77,7 +77,7 @@ VITE_TWITCH_REDIRECT_URI=http://localhost:5174/auth/callback
 
 1. Gehe zu https://dev.twitch.tv/console/apps
 2. Klicke "Register Your Application"
-3. Name: `StreamDraw` (oder beliebig)
+3. Name: `PaintWithChat` (oder beliebig)
 4. OAuth Redirect URLs:
    - `http://localhost:5173/auth/callback`
    - `http://localhost:5174/auth/callback`
@@ -148,7 +148,7 @@ Die Session-ID findest du im Control Panel in der OBS Overlay URL.
 
 ## 🐛 Häufige Probleme
 
-### "Module not found: @streamdraw/shared"
+### "Module not found: @paintwithchat/shared"
 
 ```bash
 cd packages/shared

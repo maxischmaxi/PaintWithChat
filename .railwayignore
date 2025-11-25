@@ -1,0 +1,40 @@
+# Railway Ignore File
+# Files and directories to ignore during deployment
+
+# Development
+node_modules/
+.git/
+.github/
+
+# Environment files (use Railway Variables instead)
+.env
+.env.*
+!.env.example
+
+# Build artifacts (will be rebuilt)
+dist/
+build/
+*.log
+
+# Development tools
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
+coverage/
+
+# Documentation (optional - remove if you want to deploy docs)
+*.md
+!README.md
+
+# Other
+.DS_Store
+Thumbs.db

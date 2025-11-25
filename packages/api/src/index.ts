@@ -6,6 +6,7 @@ import { connectDatabase } from "./config/database";
 import { initializeSocket } from "./socket";
 import authRoutes from "./routes/auth";
 import sessionRoutes from "./routes/session";
+import healthRoutes from "./routes/health";
 
 const app = express();
 const httpServer = createServer(app);
@@ -20,13 +21,13 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Health checks (must be before other routes for proper routing)
+app.use("/health", healthRoutes);
+
+// Application routes
 app.use("/auth", authRoutes);
 app.use("/session", sessionRoutes);
-
-// Health check
-app.get("/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
+  }
 });
 
 // Initialize Socket.io
@@ -41,7 +42,7 @@ const start = async () => {
     // Start HTTP server
     httpServer.listen(config.port, () => {
       console.log("");
-      console.log("🚀 StreamDraw API Server");
+      console.log("🚀 PaintWithChat API Server");
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
       console.log(`📡 HTTP Server: http://localhost:${config.port}`);
       console.log(`🔌 WebSocket Server: ws://localhost:${config.port}`);

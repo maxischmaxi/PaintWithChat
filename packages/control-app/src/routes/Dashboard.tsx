@@ -23,7 +23,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen">
       <nav className="border-b bg-card px-4 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold text-primary">StreamDraw</div>
+        <div className="text-2xl font-bold text-primary">PaintWithChat</div>
         <div className="flex items-center gap-4">
           <Badge variant={connected ? "default" : "secondary"}>
             {connected ? "Connected" : "Disconnected"}

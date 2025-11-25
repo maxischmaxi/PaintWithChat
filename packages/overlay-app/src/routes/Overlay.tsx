@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router";
 import { useOverlaySocket } from "../hooks/useOverlaySocket";
 import { DrawingCanvas } from "../components/DrawingCanvas";
-import type { Point, DrawingStroke } from "@streamdraw/shared";
+import type { Point, DrawingStroke } from "@paintwithchat/shared";
 
 export default function Overlay() {
   const [searchParams] = useSearchParams();

@@ -3,19 +3,19 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:7.0
-    container_name: streamdraw-mongodb
+    container_name: paintwithchat-mongodb
     restart: unless-stopped
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: streamdraw
-      MONGO_INITDB_ROOT_PASSWORD: streamdraw123
-      MONGO_INITDB_DATABASE: streamdraw
+      MONGO_INITDB_ROOT_USERNAME: paintwithchat
+      MONGO_INITDB_ROOT_PASSWORD: paintwithchat123
+      MONGO_INITDB_DATABASE: paintwithchat
     volumes:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
     networks:
-      - streamdraw-network
+      - paintwithchat-network
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
@@ -24,21 +24,21 @@ services:
 
   mongo-express:
     image: mongo-express:latest
-    container_name: streamdraw-mongo-express
+    container_name: paintwithchat-mongo-express
     restart: unless-stopped
     ports:
       - "8081:8081"
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: streamdraw
-      ME_CONFIG_MONGODB_ADMINPASSWORD: streamdraw123
-      ME_CONFIG_MONGODB_URL: mongodb://streamdraw:streamdraw123@mongodb:27017/
+      ME_CONFIG_MONGODB_ADMINUSERNAME: paintwithchat
+      ME_CONFIG_MONGODB_ADMINPASSWORD: paintwithchat123
+      ME_CONFIG_MONGODB_URL: mongodb://paintwithchat:paintwithchat123@mongodb:27017/
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin
     depends_on:
       mongodb:
         condition: service_healthy
     networks:
-      - streamdraw-network
+      - paintwithchat-network
 
 volumes:
   mongodb_data:
@@ -47,5 +47,5 @@ volumes:
     driver: local
 
 networks:
-  streamdraw-network:
+  paintwithchat-network:
     driver: bridge

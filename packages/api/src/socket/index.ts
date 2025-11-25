@@ -8,7 +8,7 @@ import {
   DrawingStroke,
   Point,
   UserSession,
-} from "@streamdraw/shared";
+} from "@paintwithchat/shared";
 import { config } from "../config/env";
 
 type SocketIOServer = Server<ClientToServerEvents, ServerToClientEvents>;

@@ -7,7 +7,7 @@ import type {
   UserSession,
   Point,
   DrawingStroke,
-} from "@streamdraw/shared";
+} from "@paintwithchat/shared";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 

@@ -1,15 +1,17 @@
 {
-  "name": "@streamdraw/control-app",
+  "name": "@paintwithchat/control-app",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port 5173",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "railway:build": "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @paintwithchat/shared build && pnpm --filter @paintwithchat/control-app build",
+    "railway:start": "npx serve -s dist -l $PORT"
   },
   "dependencies": {
-    "@streamdraw/shared": "workspace:*",
+    "@paintwithchat/shared": "workspace:*",
     "@tanstack/react-query": "^5.62.12",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

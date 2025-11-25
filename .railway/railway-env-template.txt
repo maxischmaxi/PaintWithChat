@@ -1,0 +1,120 @@
+┌──────────────────────────────────────────────────────────────┐
+│  PaintWithChat - Railway Environment Variables Template         │
+│  Copy these values to your Railway services                  │
+└──────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════╗
+║  SERVICE: api (Backend)                                        ║
+╚════════════════════════════════════════════════════════════════╝
+
+# Database Connection (automatisch von MongoDB Plugin)
+MONGODB_URI=${{MongoDB.MONGO_URL}}
+
+# JWT Secret (generiere mit: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))")
+JWT_SECRET=DEIN_SICHERER_JWT_SECRET_HIER
+
+# Twitch OAuth Credentials (von https://dev.twitch.tv/console)
+TWITCH_CLIENT_ID=deine_twitch_client_id_hier
+TWITCH_CLIENT_SECRET=dein_twitch_client_secret_hier
+
+# Nach Deployment aktualisieren mit echten Domains
+TWITCH_REDIRECT_URI=https://DEINE_CONTROL_APP_DOMAIN/auth/callback
+CORS_ORIGIN=https://DEINE_CONTROL_APP_DOMAIN,https://DEINE_OVERLAY_APP_DOMAIN
+
+# Optional (Railway setzt diese automatisch)
+NODE_ENV=production
+PORT=3001
+
+
+╔════════════════════════════════════════════════════════════════╗
+║  SERVICE: control-app (Streamer Dashboard)                    ║
+╚════════════════════════════════════════════════════════════════╝
+
+# Nach API-Deployment aktualisieren mit echter Domain
+VITE_API_URL=https://DEINE_API_DOMAIN
+VITE_WS_URL=wss://DEINE_API_DOMAIN
+
+# Twitch OAuth (gleiche Client ID wie API)
+VITE_TWITCH_CLIENT_ID=deine_twitch_client_id_hier
+
+# Nach Control App Deployment aktualisieren mit echter Domain
+VITE_TWITCH_REDIRECT_URI=https://DEINE_CONTROL_APP_DOMAIN/auth/callback
+
+# Optional
+NODE_ENV=production
+
+
+╔════════════════════════════════════════════════════════════════╗
+║  SERVICE: overlay-app (Viewer Overlay)                        ║
+╚════════════════════════════════════════════════════════════════╝
+
+# Nach API-Deployment aktualisieren mit echter Domain
+VITE_API_URL=https://DEINE_API_DOMAIN
+VITE_WS_URL=wss://DEINE_API_DOMAIN
+
+# Twitch OAuth (gleiche Client ID wie API)
+VITE_TWITCH_CLIENT_ID=deine_twitch_client_id_hier
+
+# Nach Overlay App Deployment aktualisieren mit echter Domain
+VITE_TWITCH_REDIRECT_URI=https://DEINE_OVERLAY_APP_DOMAIN/auth/callback
+
+# Optional
+NODE_ENV=production
+
+
+╔════════════════════════════════════════════════════════════════╗
+║  WICHTIGE HINWEISE                                             ║
+╚════════════════════════════════════════════════════════════════╝
+
+1. JWT_SECRET generieren:
+   node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+
+2. Deployment Reihenfolge:
+   a) MongoDB Plugin hinzufügen
+   b) API Service deployen
+   c) Control App deployen
+   d) Overlay App deployen
+   e) Domains kopieren
+   f) Environment Variables mit echten Domains aktualisieren
+   g) Alle Services NEU deployen (wichtig für Frontend!)
+
+3. Twitch OAuth URLs registrieren auf https://dev.twitch.tv/console:
+   - https://DEINE_CONTROL_APP_DOMAIN/auth/callback
+   - https://DEINE_OVERLAY_APP_DOMAIN/auth/callback
+
+4. Frontend Environment Variables:
+   - VITE_* Variablen werden beim BUILD eingebaut
+   - Änderungen erfordern REDEPLOY des Services!
+
+5. WebSocket URL:
+   - Muss wss:// sein (nicht ws://)
+   - Gleiche Domain wie VITE_API_URL
+
+6. CORS_ORIGIN:
+   - Kommagetrennte Liste (kein Leerzeichen!)
+   - Beide Frontend-Domains eintragen
+
+╔════════════════════════════════════════════════════════════════╗
+║  BEISPIEL MIT ECHTEN DOMAINS                                   ║
+╚════════════════════════════════════════════════════════════════╝
+
+Angenommen deine Railway-Domains sind:
+- API: paintwithchat-api-production.up.railway.app
+- Control: paintwithchat-control-production.up.railway.app
+- Overlay: paintwithchat-overlay-production.up.railway.app
+
+Dann:
+
+API:
+  CORS_ORIGIN=https://paintwithchat-control-production.up.railway.app,https://paintwithchat-overlay-production.up.railway.app
+  TWITCH_REDIRECT_URI=https://paintwithchat-control-production.up.railway.app/auth/callback
+
+Control App:
+  VITE_API_URL=https://paintwithchat-api-production.up.railway.app
+  VITE_WS_URL=wss://paintwithchat-api-production.up.railway.app
+  VITE_TWITCH_REDIRECT_URI=https://paintwithchat-control-production.up.railway.app/auth/callback
+
+Overlay App:
+  VITE_API_URL=https://paintwithchat-api-production.up.railway.app
+  VITE_WS_URL=wss://paintwithchat-api-production.up.railway.app
+  VITE_TWITCH_REDIRECT_URI=https://paintwithchat-overlay-production.up.railway.app/auth/callback

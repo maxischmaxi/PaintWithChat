@@ -1,4 +1,4 @@
-# 🐳 Docker Setup für StreamDraw
+# 🐳 Docker Setup für PaintWithChat
 
 ## MongoDB mit Docker Compose
 
@@ -31,14 +31,14 @@ docker-compose down -v
 **MongoDB Connection String:**
 
 ```
-mongodb://streamdraw:streamdraw123@localhost:27017/streamdraw?authSource=admin
+mongodb://paintwithchat:paintwithchat123@localhost:27017/paintwithchat?authSource=admin
 ```
 
 **Zugangsdaten:**
 
-- Username: `streamdraw`
-- Password: `streamdraw123`
-- Database: `streamdraw`
+- Username: `paintwithchat`
+- Password: `paintwithchat123`
+- Database: `paintwithchat`
 - Port: `27017`
 
 ### Mongo Express (Web UI)
@@ -63,7 +63,7 @@ cp .env.example .env
 2. **Setze die MongoDB URI in `.env`:**
 
 ```env
-MONGODB_URI=mongodb://streamdraw:streamdraw123@localhost:27017/streamdraw?authSource=admin
+MONGODB_URI=mongodb://paintwithchat:paintwithchat123@localhost:27017/paintwithchat?authSource=admin
 ```
 
 3. **Starte die Anwendung:**
@@ -103,7 +103,7 @@ docker-compose logs mongodb
 docker-compose ps
 
 # Teste Verbindung mit mongosh
-docker exec -it streamdraw-mongodb mongosh -u streamdraw -p streamdraw123 --authenticationDatabase admin
+docker exec -it paintwithchat-mongodb mongosh -u paintwithchat -p paintwithchat123 --authenticationDatabase admin
 ```
 
 **Daten zurücksetzen:**
@@ -121,30 +121,30 @@ docker-compose up -d
 **Backup erstellen:**
 
 ```bash
-docker exec streamdraw-mongodb mongodump \
-  -u streamdraw \
-  -p streamdraw123 \
+docker exec paintwithchat-mongodb mongodump \
+  -u paintwithchat \
+  -p paintwithchat123 \
   --authenticationDatabase admin \
-  --db streamdraw \
+  --db paintwithchat \
   --out /data/backup
 
 # Backup aus Container kopieren
-docker cp streamdraw-mongodb:/data/backup ./mongodb-backup
+docker cp paintwithchat-mongodb:/data/backup ./mongodb-backup
 ```
 
 **Backup wiederherstellen:**
 
 ```bash
 # Backup in Container kopieren
-docker cp ./mongodb-backup streamdraw-mongodb:/data/restore
+docker cp ./mongodb-backup paintwithchat-mongodb:/data/restore
 
 # Restore durchführen
-docker exec streamdraw-mongodb mongorestore \
-  -u streamdraw \
-  -p streamdraw123 \
+docker exec paintwithchat-mongodb mongorestore \
+  -u paintwithchat \
+  -p paintwithchat123 \
   --authenticationDatabase admin \
-  --db streamdraw \
-  /data/restore/streamdraw
+  --db paintwithchat \
+  /data/restore/paintwithchat
 ```
 
 ### Produktion
@@ -166,5 +166,5 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     volumes:
-      - /opt/streamdraw/mongodb:/data/db
+      - /opt/paintwithchat/mongodb:/data/db
 ```

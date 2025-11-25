@@ -24,7 +24,7 @@ export default function Session() {
   return (
     <div className="h-screen flex flex-col">
       <nav className="border-b bg-card flex-shrink-0 px-4 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold text-primary">StreamDraw</div>
+        <div className="text-2xl font-bold text-primary">PaintWithChat</div>
         <div className="flex items-center gap-4">
           <Badge variant={connected ? "default" : "secondary"}>
             {connected ? "Connected" : "Disconnected"}

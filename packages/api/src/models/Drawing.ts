@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from "mongoose";
-import { DrawingStroke, Point } from "@streamdraw/shared";
+import { DrawingStroke, Point } from "@paintwithchat/shared";
 
 export interface IDrawing extends Document {
   sessionId: string;

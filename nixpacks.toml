@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = ["nodejs_20", "pnpm"]
+
+[phases.install]
+cmds = [
+  "pnpm install --frozen-lockfile",
+  "pnpm --filter @paintwithchat/shared build"
+]
+
+[phases.build]
+cmds = ["echo 'Build phase - see service-specific configs'"]
+
+[start]
+cmd = "echo 'Start - see service-specific configs'"

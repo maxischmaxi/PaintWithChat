@@ -10,7 +10,7 @@ importers:
 
   packages/api:
     dependencies:
-      '@streamdraw/shared':
+      '@paintwithchat/shared':
         specifier: workspace:*
         version: link:../shared
       cors:
@@ -56,7 +56,7 @@ importers:
 
   packages/control-app:
     dependencies:
-      '@streamdraw/shared':
+      '@paintwithchat/shared':
         specifier: workspace:*
         version: link:../shared
       '@tanstack/react-query':
@@ -126,7 +126,7 @@ importers:
 
   packages/overlay-app:
     dependencies:
-      '@streamdraw/shared':
+      '@paintwithchat/shared':
         specifier: workspace:*
         version: link:../shared
       '@tanstack/react-query':

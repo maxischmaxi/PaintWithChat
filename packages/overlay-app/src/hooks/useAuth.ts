@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import type { User } from "@streamdraw/shared";
+import type { User } from "@paintwithchat/shared";
 import { getCurrentUser } from "../utils/api";
 
 export const useAuth = () => {

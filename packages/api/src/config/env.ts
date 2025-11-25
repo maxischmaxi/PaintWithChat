@@ -33,7 +33,7 @@ dotenv.config();
 
 export const config = {
   port: parseInt(process.env.PORT || "3001", 10),
-  mongoUri: process.env.MONGODB_URI || "mongodb://localhost:27017/streamdraw",
+  mongoUri: process.env.MONGODB_URI || "mongodb://localhost:27017/paintwithchat",
   jwtSecret: process.env.JWT_SECRET || "change-this-secret",
   corsOrigin: process.env.CORS_ORIGIN?.split(",") || [
     "http://localhost:5173",

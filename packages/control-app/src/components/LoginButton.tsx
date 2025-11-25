@@ -18,7 +18,7 @@ export const LoginButton = () => {
       <Card className="w-full max-w-md border-primary/20">
         <CardHeader className="text-center space-y-2">
           <CardTitle className="text-5xl font-bold text-primary">
-            StreamDraw
+            PaintWithChat
           </CardTitle>
           <CardDescription className="text-base">
             Interactive Drawing Tool for Twitch Streamers

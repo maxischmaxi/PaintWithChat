@@ -1,10 +1,10 @@
-# 🎨 StreamDraw - Interactive Twitch Drawing Platform
+# 🎨 PaintWithChat - Interactive Twitch Drawing Platform
 
 > **AI Agent Optimized Documentation** - This README is designed for AI coding agents to quickly understand and work with the codebase.
 
 ## 📊 Project Overview
 
-**StreamDraw** is a real-time collaborative drawing platform for Twitch streamers that allows viewers to draw on the stream. The system consists of three main applications connected via WebSockets for real-time synchronization.
+**PaintWithChat** is a real-time collaborative drawing platform for Twitch streamers that allows viewers to draw on the stream. The system consists of three main applications connected via WebSockets for real-time synchronization.
 
 ### Key Capabilities
 
@@ -21,7 +21,7 @@
 ### Monorepo Structure
 
 ```
-streamdraw/
+paintwithchat/
 ├── packages/
 │   ├── api/           # Backend (Express + Socket.io + MongoDB)
 │   ├── control-app/   # Streamer Control Panel (React + Vite)
@@ -241,7 +241,7 @@ api/
 ```env
 PORT=3001
 NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/streamdraw
+MONGODB_URI=mongodb://localhost:27017/paintwithchat
 JWT_SECRET=your-secret-key
 TWITCH_CLIENT_ID=your-twitch-client-id
 TWITCH_CLIENT_SECRET=your-twitch-client-secret
@@ -331,7 +331,7 @@ control-app/
 ```jsx
 <Session> (h-screen, flex-col)
   <nav> (flex-shrink-0, px-4 py-4)
-    - StreamDraw logo (left)
+    - PaintWithChat logo (left)
     - Connected badge + User + Logout (right)
 
   <div> (flex-1, overflow-hidden)
@@ -945,7 +945,7 @@ User.findOneAndUpdate(
 ```bash
 # 1. Clone repository
 git clone <repo-url>
-cd streamdraw
+cd paintwithchat
 
 # 2. Install dependencies
 pnpm install
@@ -1258,7 +1258,7 @@ socket.on("drawing:stroke-start", (data) => {
 **Test:**
 
 ```bash
-mongosh mongodb://localhost:27017/streamdraw
+mongosh mongodb://localhost:27017/paintwithchat
 ```
 
 **6. Build errors in shared package**
@@ -1272,7 +1272,7 @@ pnpm install
 pnpm build
 ```
 
-**7. Type errors in imports from @streamdraw/shared**
+**7. Type errors in imports from @paintwithchat/shared**
 
 **Cause**: Shared package not built or stale build
 
@@ -1828,7 +1828,7 @@ on('error', {
 **Navbar:**
 
 - Full width, no container
-- Left: "StreamDraw" logo
+- Left: "PaintWithChat" logo
 - Right: Connected badge, Username, Logout button
 - Height: ~73px
 - Dark theme (bg-card)
@@ -2159,7 +2159,7 @@ describe('SessionControl', () => {
 # API (.env)
 NODE_ENV=production
 PORT=3001
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/streamdraw
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/paintwithchat
 JWT_SECRET=<strong-random-secret>
 TWITCH_CLIENT_ID=<your-client-id>
 TWITCH_CLIENT_SECRET=<your-client-secret>

@@ -30,7 +30,7 @@ nano .env
 ```
 
 ```env
-MONGODB_URI=mongodb://streamdraw:streamdraw123@localhost:27017/streamdraw?authSource=admin
+MONGODB_URI=mongodb://paintwithchat:paintwithchat123@localhost:27017/paintwithchat?authSource=admin
 TWITCH_CLIENT_ID=deine_client_id_hier
 TWITCH_CLIENT_SECRET=dein_client_secret_hier
 TWITCH_REDIRECT_URI=http://localhost:5173/auth/callback
