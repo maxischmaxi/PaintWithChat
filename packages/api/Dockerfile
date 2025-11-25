@@ -8,38 +8,50 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/api/package.json ./packages/api/
+COPY packages/control-app/package.json ./packages/control-app/
+COPY packages/overlay-app/package.json ./packages/overlay-app/
 RUN pnpm install --frozen-lockfile
 
 # Build shared package
 FROM deps AS shared-builder
 COPY packages/shared ./packages/shared
 RUN cd packages/shared && pnpm build
+RUN echo "✅ Shared package built:" && ls -la /app/packages/shared/dist
 
 # Build API
 FROM shared-builder AS api-builder
 COPY packages/api ./packages/api
 RUN cd packages/api && pnpm build
+RUN echo "✅ API built:" && ls -la /app/packages/api/dist
 
 # Production image
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Install pnpm
+# Install pnpm and Node.js production dependencies
 RUN npm install -g pnpm
 
-# Copy package files
+# Copy workspace configuration
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/shared/package.json ./packages/shared/
-COPY packages/api/package.json ./packages/api/
 
-# Install production dependencies only
+# Copy package.json for all packages (needed for workspace resolution)
+COPY packages/shared/package.json ./packages/shared/package.json
+COPY packages/api/package.json ./packages/api/package.json
+
+# Install production dependencies
 RUN pnpm install --frozen-lockfile --prod
 
-# Copy built files
+# Copy built files from builder stages
 COPY --from=shared-builder /app/packages/shared/dist ./packages/shared/dist
 COPY --from=api-builder /app/packages/api/dist ./packages/api/dist
 
-# Set environment
+# Debug: List files to verify
+RUN echo "📦 Checking built files:" && \
+    ls -la /app/packages/shared/ && \
+    ls -la /app/packages/api/ && \
+    ls -la /app/packages/api/dist/
+
+# Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3001
 
