@@ -5,15 +5,13 @@
       "icon": "🚀",
       "source": {
         "repo": "github",
-        "rootDirectory": "packages/api"
+        "rootDirectory": "/"
       },
       "build": {
-        "builder": "nixpacks",
-        "nixpacksConfigPath": "packages/api/nixpacks.toml",
-        "buildCommand": "pnpm run railway:build"
+        "builder": "dockerfile",
+        "dockerfilePath": "packages/api/Dockerfile"
       },
       "deploy": {
-        "startCommand": "pnpm run railway:start",
         "healthcheckPath": "/health",
         "healthcheckTimeout": 300,
         "restartPolicyType": "on_failure",
@@ -37,21 +35,20 @@
       "icon": "🎮",
       "source": {
         "repo": "github",
-        "rootDirectory": "packages/control-app"
+        "rootDirectory": "/"
       },
       "build": {
-        "builder": "nixpacks",
-        "nixpacksConfigPath": "packages/control-app/nixpacks.toml",
-        "buildCommand": "pnpm run railway:build"
+        "builder": "dockerfile",
+        "dockerfilePath": "packages/control-app/Dockerfile"
       },
       "deploy": {
-        "startCommand": "pnpm run railway:start",
         "healthcheckPath": "/",
         "healthcheckTimeout": 100,
         "restartPolicyType": "on_failure"
       },
       "environment": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "PORT": "3000"
       },
       "requiredVariables": [
         "VITE_API_URL",
@@ -65,21 +62,20 @@
       "icon": "👁️",
       "source": {
         "repo": "github",
-        "rootDirectory": "packages/overlay-app"
+        "rootDirectory": "/"
       },
       "build": {
-        "builder": "nixpacks",
-        "nixpacksConfigPath": "packages/overlay-app/nixpacks.toml",
-        "buildCommand": "pnpm run railway:build"
+        "builder": "dockerfile",
+        "dockerfilePath": "packages/overlay-app/Dockerfile"
       },
       "deploy": {
-        "startCommand": "pnpm run railway:start",
         "healthcheckPath": "/",
         "healthcheckTimeout": 100,
         "restartPolicyType": "on_failure"
       },
       "environment": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "production",
+        "PORT": "3000"
       },
       "requiredVariables": [
         "VITE_API_URL",

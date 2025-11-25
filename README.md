@@ -2,6 +2,8 @@
 
 > **AI Agent Optimized Documentation** - This README is designed for AI coding agents to quickly understand and work with the codebase.
 
+> ⚠️ **IMPORTANT UPDATE (2024-11-25)**: This project now uses **Docker** instead of Nixpacks for Railway deployments. See [MIGRATION_NIXPACKS_TO_DOCKER.md](MIGRATION_NIXPACKS_TO_DOCKER.md) for details.
+
 ## 📊 Project Overview
 
 **PaintWithChat** is a real-time collaborative drawing platform for Twitch streamers that allows viewers to draw on the stream. The system consists of three main applications connected via WebSockets for real-time synchronization.

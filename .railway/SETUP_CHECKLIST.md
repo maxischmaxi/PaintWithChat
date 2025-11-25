@@ -21,19 +21,22 @@ Folge dieser Checkliste Schritt für Schritt, um PaintWithChat auf Railway zu de
   - [ ] Warten bis deployed (grünes ✓)
 
 - [ ] **API Service erstellt**
-  - [ ] New → GitHub Repo → packages/api
-  - [ ] Root Directory: `packages/api`
-  - [ ] Nixpacks erkannt
+  - [ ] New → GitHub Repo
+  - [ ] Root Directory: `/`
+  - [ ] Dockerfile Path: `packages/api/Dockerfile`
+  - [ ] Docker Build erkannt
 
 - [ ] **Control App Service erstellt**
-  - [ ] New → GitHub Repo → packages/control-app
-  - [ ] Root Directory: `packages/control-app`
-  - [ ] Nixpacks erkannt
+  - [ ] New → GitHub Repo
+  - [ ] Root Directory: `/`
+  - [ ] Dockerfile Path: `packages/control-app/Dockerfile`
+  - [ ] Docker Build erkannt
 
 - [ ] **Overlay App Service erstellt**
-  - [ ] New → GitHub Repo → packages/overlay-app
-  - [ ] Root Directory: `packages/overlay-app`
-  - [ ] Nixpacks erkannt
+  - [ ] New → GitHub Repo
+  - [ ] Root Directory: `/`
+  - [ ] Dockerfile Path: `packages/overlay-app/Dockerfile`
+  - [ ] Docker Build erkannt
 
 ## 🔧 Phase 2: Environment Variables setzen (Initial)
 

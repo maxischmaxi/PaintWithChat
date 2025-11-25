@@ -44,11 +44,11 @@ Wenn du dein Repository mit Railway verbindest, erkennt Railway automatisch:
 
 ### ✅ Build-Konfigurationen
 
-- Verwendet Nixpacks für jeden Service
-- Liest Service-spezifische `nixpacks.toml` Dateien:
-  - `packages/api/nixpacks.toml`
-  - `packages/control-app/nixpacks.toml`
-  - `packages/overlay-app/nixpacks.toml`
+- Verwendet Docker für jeden Service
+- Liest Service-spezifische Dockerfiles:
+  - `packages/api/Dockerfile`
+  - `packages/control-app/Dockerfile`
+  - `packages/overlay-app/Dockerfile`
 
 ### ✅ MongoDB Plugin
 
@@ -61,19 +61,16 @@ Wenn du dein Repository mit Railway verbindest, erkennt Railway automatisch:
 
 **Location**: `packages/api/`
 
-**Build Process**:
+**Build Process** (Multi-stage Docker):
 
 ```bash
-1. pnpm install --frozen-lockfile
-2. Build packages/shared
-3. Build packages/api
+1. Install dependencies (deps stage)
+2. Build packages/shared (shared-builder stage)
+3. Build packages/api (api-builder stage)
+4. Create production image with node dist/index.js
 ```
 
-**Start Command**:
-
-```bash
-node dist/index.js
-```
+**Container**: Node.js 20 Alpine (~200MB)
 
 **Required Environment Variables**:
 
@@ -92,19 +89,16 @@ node dist/index.js
 
 **Location**: `packages/control-app/`
 
-**Build Process**:
+**Build Process** (Multi-stage Docker):
 
 ```bash
-1. pnpm install --frozen-lockfile
-2. Build packages/shared
-3. Build packages/control-app (Vite)
+1. Install dependencies (deps stage)
+2. Build packages/shared (shared-builder stage)
+3. Build packages/control-app with Vite (control-app-builder stage)
+4. Create production image serving static files via serve
 ```
 
-**Start Command**:
-
-```bash
-npx serve -s dist -l $PORT
-```
+**Container**: Node.js 20 Alpine (~50MB)
 
 **Required Environment Variables**:
 
@@ -121,19 +115,16 @@ npx serve -s dist -l $PORT
 
 **Location**: `packages/overlay-app/`
 
-**Build Process**:
+**Build Process** (Multi-stage Docker):
 
 ```bash
-1. pnpm install --frozen-lockfile
-2. Build packages/shared
-3. Build packages/overlay-app (Vite)
+1. Install dependencies (deps stage)
+2. Build packages/shared (shared-builder stage)
+3. Build packages/overlay-app with Vite (overlay-app-builder stage)
+4. Create production image serving static files via serve
 ```
 
-**Start Command**:
-
-```bash
-npx serve -s dist -l $PORT
-```
+**Container**: Node.js 20 Alpine (~50MB)
 
 **Required Environment Variables**:
 
