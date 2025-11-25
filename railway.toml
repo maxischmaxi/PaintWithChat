@@ -4,6 +4,6 @@ dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "echo 'This is a monorepo. Deploy individual services using their specific Dockerfiles.'"
-healthcheckPath = "/"
+healthcheckPath = "/health"
 healthcheckTimeout = 100
 restartPolicyType = "on_failure"
