@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
-import type { Session, Point, DrawingStroke } from "@paintwithchat/shared";
+import type { Session } from "@paintwithchat/shared";
 import { useSocket } from "../hooks/useSocket";
 import {
   startSession,
@@ -12,7 +12,7 @@ import {
   selectUser,
 } from "../utils/api";
 import { UserCard } from "./UserCard";
-import { ViewerCanvas } from "./ViewerCanvas";
+import { DrawingCanvas } from "./DrawingCanvas";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -41,47 +41,11 @@ export const SessionControl = ({
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // Drawing handlers
-  const handleStrokeStart = useCallback(
-    (userId: string, point: Point, color: string, size: number) => {
-      const canvasStart = (window as any).__canvasStrokeStart;
-      if (canvasStart) {
-        canvasStart(userId, point, color, size);
-      }
-    },
-    [],
+  // WebSocket connection (no drawing handlers - free drawing for now)
+  const { socket, connected, sessionUpdate } = useSocket(
+    session?.id || null,
+    token,
   );
-
-  const handleStrokeMove = useCallback((userId: string, point: Point) => {
-    const canvasMove = (window as any).__canvasStrokeMove;
-    if (canvasMove) {
-      canvasMove(userId, point);
-    }
-  }, []);
-
-  const handleStrokeEnd = useCallback(
-    (userId: string, stroke: DrawingStroke) => {
-      const canvasEnd = (window as any).__canvasStrokeEnd;
-      if (canvasEnd) {
-        canvasEnd(userId);
-      }
-    },
-    [],
-  );
-
-  const handleCanvasClear = useCallback(() => {
-    const canvasClear = (window as any).__canvasClear;
-    if (canvasClear) {
-      canvasClear();
-    }
-  }, []);
-
-  const { connected, sessionUpdate } = useSocket(session?.id || null, token, {
-    onStrokeStart: handleStrokeStart,
-    onStrokeMove: handleStrokeMove,
-    onStrokeEnd: handleStrokeEnd,
-    onCanvasClear: handleCanvasClear,
-  });
 
   // Notify parent about connection changes
   useEffect(() => {
@@ -340,7 +304,7 @@ export const SessionControl = ({
 
       {/* Main Content - Canvas */}
       <div className="flex-1 p-6">
-        <ViewerCanvas />
+        <DrawingCanvas socket={socket} />
       </div>
     </div>
   );

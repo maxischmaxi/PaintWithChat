@@ -1,32 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import type {
   ClientToServerEvents,
   ServerToClientEvents,
-  Point,
-  DrawingStroke,
 } from "@paintwithchat/shared";
 
 type SocketType = Socket<ServerToClientEvents, ClientToServerEvents>;
 
 const WS_URL = import.meta.env.VITE_WS_URL || "http://localhost:3001";
 
-interface DrawingHandlers {
-  onStrokeStart: (
-    userId: string,
-    point: Point,
-    color: string,
-    size: number,
-  ) => void;
-  onStrokeMove: (userId: string, point: Point) => void;
-  onStrokeEnd: (userId: string, stroke: DrawingStroke) => void;
-  onCanvasClear: () => void;
-}
-
-export const useOverlaySocket = (
-  sessionId: string | null,
-  handlers: DrawingHandlers,
-) => {
+export const useOverlaySocket = (sessionId: string | null) => {
   const [socket, setSocket] = useState<SocketType | null>(null);
   const [connected, setConnected] = useState(false);
   const [currentDrawerName, setCurrentDrawerName] = useState<string>("");
@@ -71,22 +54,6 @@ export const useOverlaySocket = (
 
     newSocket.on("drawer:changed", (data) => {
       setCurrentDrawerName(data.username);
-    });
-
-    newSocket.on("drawing:stroke-start", (data) => {
-      handlers.onStrokeStart(data.userId, data.point, data.color, data.size);
-    });
-
-    newSocket.on("drawing:stroke-move", (data) => {
-      handlers.onStrokeMove(data.userId, data.point);
-    });
-
-    newSocket.on("drawing:stroke-end", (data) => {
-      handlers.onStrokeEnd(data.userId, data.stroke);
-    });
-
-    newSocket.on("canvas:cleared", () => {
-      handlers.onCanvasClear();
     });
 
     newSocket.on("error", (data) => {

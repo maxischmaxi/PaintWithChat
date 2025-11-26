@@ -28,6 +28,12 @@ const activeStrokes = new Map<
   { points: Point[]; color: string; size: number; userId: string }
 >();
 
+// Store drawing save timers per session (for 1-second debouncing)
+const drawingSaveTimers = new Map<string, NodeJS.Timeout>();
+
+// Store all strokes per session in memory for quick retrieval
+const sessionStrokes = new Map<string, DrawingStroke[]>();
+
 export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
   const io: SocketIOServer = new Server(httpServer, {
     cors: {
@@ -81,6 +87,21 @@ export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
           sessionId,
         };
 
+        // Load existing drawings for this session
+        let strokes: DrawingStroke[] = [];
+
+        // Check memory cache first
+        if (sessionStrokes.has(sessionId)) {
+          strokes = sessionStrokes.get(sessionId)!;
+        } else {
+          // Load from database
+          const drawing = await Drawing.findOne({ sessionId });
+          if (drawing && drawing.strokes.length > 0) {
+            strokes = drawing.strokes;
+            sessionStrokes.set(sessionId, strokes);
+          }
+        }
+
         // Send current session state
         io.to(sessionId).emit("session:updated", {
           session: {
@@ -90,6 +111,11 @@ export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
             active: session.active,
           },
         });
+
+        // Send existing drawings to the joining client
+        if (strokes.length > 0) {
+          socket.emit("drawing:load", { strokes });
+        }
 
         console.log(
           `🎥 Streamer ${user.displayName} joined session ${sessionId} (observer mode)`,
@@ -119,6 +145,21 @@ export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
           sessionId,
         };
 
+        // Load existing drawings for this session
+        let strokes: DrawingStroke[] = [];
+
+        // Check memory cache first
+        if (sessionStrokes.has(sessionId)) {
+          strokes = sessionStrokes.get(sessionId)!;
+        } else {
+          // Load from database
+          const drawing = await Drawing.findOne({ sessionId });
+          if (drawing && drawing.strokes.length > 0) {
+            strokes = drawing.strokes;
+            sessionStrokes.set(sessionId, strokes);
+          }
+        }
+
         // Send current session state to viewer
         io.to(sessionId).emit("session:updated", {
           session: {
@@ -128,6 +169,11 @@ export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
             active: session.active,
           },
         });
+
+        // Send existing drawings to the joining client
+        if (strokes.length > 0) {
+          socket.emit("drawing:load", { strokes });
+        }
 
         console.log(`👁 Anonymous viewer joined session ${sessionId}`);
       } catch (error) {
@@ -214,16 +260,10 @@ export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
       await handleUserLeave(socket, io);
     });
 
-    // Handle drawing start
+    // Handle drawing start (no authorization - free drawing)
     socket.on("drawing:start", async ({ point, color, size }) => {
       const data = socket.data as SocketData;
       if (!data || !data.sessionId) return;
-
-      const session = await Session.findById(data.sessionId);
-      if (!session || session.currentDrawerId !== data.userId) {
-        socket.emit("error", { message: "Not authorized to draw" });
-        return;
-      }
 
       // Store stroke in memory
       const strokeId = `${socket.id}-${Date.now()}`;
@@ -231,12 +271,12 @@ export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
         points: [point],
         color,
         size,
-        userId: data.userId,
+        userId: data.userId || "anonymous",
       });
 
       // Broadcast to all clients in session
       io.to(data.sessionId).emit("drawing:stroke-start", {
-        userId: data.userId,
+        userId: data.userId || "anonymous",
         point,
         color,
         size,
@@ -288,57 +328,147 @@ export const initializeSocket = (httpServer: HTTPServer): SocketIOServer => {
         timestamp: new Date(),
       };
 
-      // Save to database
-      try {
-        let drawing = await Drawing.findOne({
-          sessionId: data.sessionId,
-          userId: data.userId,
-        });
-
-        if (!drawing) {
-          drawing = await Drawing.create({
-            sessionId: data.sessionId,
-            userId: data.userId,
-            username: data.username,
-            strokes: [finalStroke],
-          });
-        } else {
-          drawing.strokes.push(finalStroke);
-          await drawing.save();
-        }
-
-        // Remove from memory
-        activeStrokes.delete(strokeId);
-
-        // Broadcast completion
-        io.to(data.sessionId).emit("drawing:stroke-end", {
-          userId: data.userId,
-          stroke: finalStroke,
-        });
-      } catch (error) {
-        console.error("Save stroke error:", error);
+      // Add stroke to session memory cache
+      if (!sessionStrokes.has(data.sessionId)) {
+        sessionStrokes.set(data.sessionId, []);
       }
+      sessionStrokes.get(data.sessionId)!.push(finalStroke);
+
+      // Remove from active strokes
+      activeStrokes.delete(strokeId);
+
+      // Broadcast completion
+      io.to(data.sessionId).emit("drawing:stroke-end", {
+        userId: stroke.userId,
+        stroke: finalStroke,
+      });
+
+      // Debounced save to database (1 second after last stroke)
+      // Clear existing timer for this session
+      if (drawingSaveTimers.has(data.sessionId)) {
+        clearTimeout(drawingSaveTimers.get(data.sessionId)!);
+      }
+
+      // Set new timer
+      const timer = setTimeout(async () => {
+        try {
+          const strokes = sessionStrokes.get(data.sessionId);
+          if (!strokes || strokes.length === 0) return;
+
+          // Save all strokes to database
+          let drawing = await Drawing.findOne({
+            sessionId: data.sessionId,
+          });
+
+          if (!drawing) {
+            drawing = await Drawing.create({
+              sessionId: data.sessionId,
+              userId: "session",
+              username: "session",
+              strokes: strokes,
+            });
+          } else {
+            drawing.strokes = strokes;
+            await drawing.save();
+          }
+
+          console.log(
+            `💾 Saved ${strokes.length} strokes for session ${data.sessionId}`,
+          );
+
+          // Clean up timer
+          drawingSaveTimers.delete(data.sessionId);
+        } catch (error) {
+          console.error("Save strokes error:", error);
+        }
+      }, 1000); // 1 second debounce
+
+      drawingSaveTimers.set(data.sessionId, timer);
     });
 
-    // Handle canvas clear
+    // Handle canvas clear (no authorization - free drawing)
     socket.on("canvas:clear", async () => {
       const data = socket.data as SocketData;
       if (!data || !data.sessionId) return;
 
-      const session = await Session.findById(data.sessionId);
-      if (!session || session.currentDrawerId !== data.userId) {
-        socket.emit("error", { message: "Not authorized to clear canvas" });
-        return;
-      }
+      // Clear session strokes from memory
+      sessionStrokes.set(data.sessionId, []);
 
-      // Clear all strokes for current drawer in this session
+      // Clear from database
       await Drawing.deleteMany({
         sessionId: data.sessionId,
-        userId: data.userId,
       });
+
+      // Clear any pending save timer
+      if (drawingSaveTimers.has(data.sessionId)) {
+        clearTimeout(drawingSaveTimers.get(data.sessionId)!);
+        drawingSaveTimers.delete(data.sessionId);
+      }
+
+      console.log(`🗑️  Cleared canvas for session ${data.sessionId}`);
 
       // Broadcast to all clients
       io.to(data.sessionId).emit("canvas:cleared");
+    });
+
+    // Handle undo (no authorization - free drawing)
+    socket.on("drawing:undo", async () => {
+      const data = socket.data as SocketData;
+      console.log("📥 Received undo event", {
+        hasData: !!data,
+        sessionId: data?.sessionId,
+        socketId: socket.id,
+      });
+
+      if (!data || !data.sessionId) {
+        console.log("❌ No socket data or sessionId for undo");
+        return;
+      }
+
+      // Remove last stroke from session memory
+      const strokes = sessionStrokes.get(data.sessionId);
+      console.log(
+        `🎨 Session ${data.sessionId} has ${strokes?.length || 0} strokes`,
+      );
+
+      if (strokes && strokes.length > 0) {
+        const removedStroke = strokes.pop();
+        sessionStrokes.set(data.sessionId, strokes);
+
+        // Clear any pending save timer and trigger immediate save
+        if (drawingSaveTimers.has(data.sessionId)) {
+          clearTimeout(drawingSaveTimers.get(data.sessionId)!);
+          drawingSaveTimers.delete(data.sessionId);
+        }
+
+        // Save updated strokes to database immediately
+        try {
+          let drawing = await Drawing.findOne({
+            sessionId: data.sessionId,
+          });
+
+          if (drawing) {
+            drawing.strokes = strokes;
+            await drawing.save();
+          }
+
+          console.log(
+            `↩️  Undone stroke for session ${data.sessionId}, ${strokes.length} strokes remaining`,
+          );
+        } catch (error) {
+          console.error("Save undo error:", error);
+        }
+
+        // Broadcast to all clients
+        console.log(
+          `📢 Broadcasting undone event to session ${data.sessionId}`,
+        );
+        io.to(data.sessionId).emit("drawing:undone", {
+          strokeId: removedStroke?.id || "",
+        });
+      } else {
+        console.log("⚠️  No strokes to undo");
+      }
     });
   });
 

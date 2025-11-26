@@ -15,6 +15,7 @@ export interface ClientToServerEvents {
   }) => void;
   "drawing:move": (data: { point: Point }) => void;
   "drawing:end": () => void;
+  "drawing:undo": () => void;
   "canvas:clear": () => void;
 }
 
@@ -35,6 +36,8 @@ export interface ServerToClientEvents {
     userId: string;
     stroke: DrawingStroke;
   }) => void;
+  "drawing:load": (data: { strokes: DrawingStroke[] }) => void;
+  "drawing:undone": (data: { strokeId: string }) => void;
   "canvas:cleared": () => void;
   error: (data: { message: string }) => void;
 }

@@ -1,58 +1,12 @@
-import { useState, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router";
 import { useOverlaySocket } from "../hooks/useOverlaySocket";
-import { DrawingCanvas } from "../components/DrawingCanvas";
-import type { Point, DrawingStroke } from "@paintwithchat/shared";
+import { ViewerCanvas } from "../components/ViewerCanvas";
 
 export default function Overlay() {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session");
 
-  const canvasRef = useRef<any>(null);
-  const [remoteDrawings, setRemoteDrawings] = useState<Map<string, any>>(
-    new Map(),
-  );
-
-  const handlers = {
-    onStrokeStart: useCallback(
-      (userId: string, point: Point, color: string, size: number) => {
-        setRemoteDrawings((prev) => {
-          const newMap = new Map(prev);
-          newMap.set(userId, { points: [point], color, size });
-          return newMap;
-        });
-      },
-      [],
-    ),
-    onStrokeMove: useCallback((userId: string, point: Point) => {
-      setRemoteDrawings((prev) => {
-        const stroke = prev.get(userId);
-        if (!stroke) return prev;
-
-        const newMap = new Map(prev);
-        newMap.set(userId, {
-          ...stroke,
-          points: [...stroke.points, point],
-        });
-        return newMap;
-      });
-    }, []),
-    onStrokeEnd: useCallback((userId: string, stroke: DrawingStroke) => {
-      setRemoteDrawings((prev) => {
-        const newMap = new Map(prev);
-        newMap.delete(userId);
-        return newMap;
-      });
-    }, []),
-    onCanvasClear: useCallback(() => {
-      setRemoteDrawings(new Map());
-    }, []),
-  };
-
-  const { connected, currentDrawerName } = useOverlaySocket(
-    sessionId,
-    handlers,
-  );
+  const { socket, connected, currentDrawerName } = useOverlaySocket(sessionId);
 
   if (!sessionId) {
     return (
@@ -77,17 +31,7 @@ export default function Overlay() {
       )}
 
       {/* Drawing Canvas - View Only */}
-      <DrawingCanvas
-        ref={canvasRef}
-        isDrawing={false}
-        onDrawingStart={() => {}}
-        onDrawingMove={() => {}}
-        onDrawingEnd={() => {}}
-        onRemoteStrokeStart={handlers.onStrokeStart}
-        onRemoteStrokeMove={handlers.onStrokeMove}
-        onRemoteStrokeEnd={handlers.onStrokeEnd}
-        onClear={() => {}}
-      />
+      <ViewerCanvas socket={socket} />
 
       {/* Connection Status */}
       {!connected && (
